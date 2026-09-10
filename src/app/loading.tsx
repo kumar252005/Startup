@@ -1,0 +1,1 @@
+export default function Loading() { return <div className="flex min-h-[50vh] items-center justify-center"><div className="flex items-center gap-3 text-sm text-zinc-600"><span className="size-4 animate-spin rounded-full border-2 border-zinc-200 border-t-blue-600" />Loading Ventrio</div></div>; }
