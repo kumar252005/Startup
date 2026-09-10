@@ -16,7 +16,7 @@ export function absoluteUrl(path = "/") {
 export function pageMetadata(title: string, description: string, path: string): Metadata {
   const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
   return {
-    title: fullTitle,
+    title: title === siteConfig.name ? { absolute: `${siteConfig.name} | ${siteConfig.tagline}` } : title,
     description,
     alternates: { canonical: path },
     openGraph: { title: fullTitle, description, url: path, siteName: siteConfig.name, type: "website" },

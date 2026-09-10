@@ -11,6 +11,8 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    // Agent-created bootstrap directory; not part of this application.
+    "ventrio-platform/**",
     "next-env.d.ts",
   ]),
 ]);

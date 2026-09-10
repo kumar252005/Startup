@@ -15,14 +15,14 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
   return <p className={cn("text-xs font-semibold uppercase tracking-[0.16em] text-blue-600", className)}>{children}</p>;
 }
 
-export function ButtonLink({ href, children, variant = "primary", className }: { href: string; children: ReactNode; variant?: "primary" | "secondary" | "dark" | "text"; className?: string }) {
+export function ButtonLink({ href, children, variant = "primary", className, onClick }: { href: string; children: ReactNode; variant?: "primary" | "secondary" | "dark" | "text"; className?: string; onClick?: () => void }) {
   const styles = {
     primary: "bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline-blue-600",
     secondary: "border border-zinc-300 bg-white text-zinc-950 hover:border-zinc-950 hover:bg-zinc-50 focus-visible:outline-zinc-950",
     dark: "bg-zinc-950 text-white hover:bg-zinc-800 focus-visible:outline-zinc-950",
     text: "text-zinc-950 hover:text-blue-600 focus-visible:outline-blue-600",
   };
-  return <Link href={href} className={cn("inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2", styles[variant], variant === "text" && "px-0", className)}>{children}{variant === "text" && <ArrowRight className="size-4" aria-hidden="true" />}</Link>;
+  return <Link href={href} onClick={onClick} className={cn("inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2", styles[variant], variant === "text" && "px-0", className)}>{children}{variant === "text" && <ArrowRight className="size-4" aria-hidden="true" />}</Link>;
 }
 
 export function Button({ children, className, variant = "primary", ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "dark" }) {

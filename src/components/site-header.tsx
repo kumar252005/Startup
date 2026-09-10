@@ -25,6 +25,7 @@ export function SiteHeader() {
   const [mobileSection, setMobileSection] = useState<string | null>(null);
 
   const toggleMobileSection = (section: string) => setMobileSection((current) => current === section ? null : section);
+  const closeMobile = () => { setMobileOpen(false); setMobileSection(null); };
   const menuClasses = "absolute left-1/2 top-full z-50 mt-4 w-[min(92vw,1040px)] -translate-x-1/2 rounded-lg border border-zinc-200 bg-white p-6 shadow-[0_24px_64px_rgba(9,9,11,0.14)]";
 
   return <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
@@ -47,18 +48,18 @@ export function SiteHeader() {
       <button onClick={() => setMobileOpen((current) => !current)} className="grid size-10 place-items-center rounded-md border border-zinc-200 text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 lg:hidden" aria-label={mobileOpen ? "Close navigation" : "Open navigation"} aria-expanded={mobileOpen}>{mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}</button>
     </Container>
     {mobileOpen && <div className="border-t border-zinc-200 bg-white lg:hidden"><Container className="py-4"><nav className="space-y-1" aria-label="Mobile navigation">
-      <MobileGroup label="Services" href="/services" isOpen={mobileSection === "Services"} onToggle={() => toggleMobileSection("Services")} groups={serviceNav.map((group) => ({ title: group.title, items: group.items }))} />
-      {topLevel.map((menu) => <MobileGroup key={menu.label} label={menu.label} href={menu.href} isOpen={mobileSection === menu.label} onToggle={() => toggleMobileSection(menu.label)} groups={[{ title: `${menu.label} overview`, items: menu.items }]} />)}
-      <MobileLink href="/work">Work</MobileLink><MobileLink href="/insights">Insights</MobileLink><MobileLink href="/about">About</MobileLink><MobileLink href="/process">How we work</MobileLink><MobileLink href="/contact">Contact</MobileLink>
-      <ButtonLink href="/contact" className="mt-4 w-full">Start a Project</ButtonLink>
+      <MobileGroup label="Services" href="/services" isOpen={mobileSection === "Services"} onToggle={() => toggleMobileSection("Services")} onNavigate={closeMobile} groups={serviceNav.map((group) => ({ title: group.title, items: group.items }))} />
+      {topLevel.map((menu) => <MobileGroup key={menu.label} label={menu.label} href={menu.href} isOpen={mobileSection === menu.label} onToggle={() => toggleMobileSection(menu.label)} onNavigate={closeMobile} groups={[{ title: `${menu.label} overview`, items: menu.items }]} />)}
+      <MobileLink href="/work" onNavigate={closeMobile}>Work</MobileLink><MobileLink href="/insights" onNavigate={closeMobile}>Insights</MobileLink><MobileLink href="/about" onNavigate={closeMobile}>About</MobileLink><MobileLink href="/process" onNavigate={closeMobile}>How we work</MobileLink><MobileLink href="/contact" onNavigate={closeMobile}>Contact</MobileLink>
+      <ButtonLink href="/contact" onClick={closeMobile} className="mt-4 w-full">Start a Project</ButtonLink>
     </nav></Container></div>}
   </header>;
 }
 
-function MobileLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return <Link href={href} className="block rounded-md px-3 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-50">{children}</Link>;
+function MobileLink({ href, children, onNavigate }: { href: string; children: React.ReactNode; onNavigate: () => void }) {
+  return <Link href={href} onClick={onNavigate} className="block rounded-md px-3 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-50">{children}</Link>;
 }
 
-function MobileGroup({ label, href, isOpen, onToggle, groups }: { label: string; href: string; isOpen: boolean; onToggle: () => void; groups: { title: string; items: readonly (readonly [string, string])[] }[] }) {
-  return <div className="border-b border-zinc-100 py-1"><div className="flex items-center justify-between"><Link href={href} className="rounded-md px-3 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-50">{label}</Link><button onClick={onToggle} aria-label={`Toggle ${label} menu`} aria-expanded={isOpen} className="mr-1 grid size-10 place-items-center rounded-md text-zinc-600 hover:bg-zinc-50"><ChevronDown className={cn("size-4 transition-transform", isOpen && "rotate-180")} /></button></div>{isOpen && <div className="space-y-4 px-3 pb-4 pt-2">{groups.map((group) => <div key={group.title}><p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">{group.title}</p>{group.items.map(([itemLabel, itemHref]) => <Link className="block py-1.5 text-sm text-zinc-700" href={itemHref} key={itemLabel}>{itemLabel}</Link>)}</div>)}</div>}</div>;
+function MobileGroup({ label, href, isOpen, onToggle, onNavigate, groups }: { label: string; href: string; isOpen: boolean; onToggle: () => void; onNavigate: () => void; groups: { title: string; items: readonly (readonly [string, string])[] }[] }) {
+  return <div className="border-b border-zinc-100 py-1"><div className="flex items-center justify-between"><Link href={href} onClick={onNavigate} className="rounded-md px-3 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-50">{label}</Link><button onClick={onToggle} aria-label={`Toggle ${label} menu`} aria-expanded={isOpen} className="mr-1 grid size-10 place-items-center rounded-md text-zinc-600 hover:bg-zinc-50"><ChevronDown className={cn("size-4 transition-transform", isOpen && "rotate-180")} /></button></div>{isOpen && <div className="space-y-4 px-3 pb-4 pt-2">{groups.map((group) => <div key={group.title}><p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">{group.title}</p>{group.items.map(([itemLabel, itemHref]) => <Link onClick={onNavigate} className="block py-1.5 text-sm text-zinc-700" href={itemHref} key={itemLabel}>{itemLabel}</Link>)}</div>)}</div>}</div>;
 }
